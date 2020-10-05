@@ -1,0 +1,14 @@
+{
+  "name": "rest-api",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "git@github.com:mARC3L87/rest-api.git",
+  "author": "Marcel Łukomski <marcel.lukomski@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "4.17.1"
+  }
+}
