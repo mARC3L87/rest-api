@@ -1,24 +1,20 @@
 import React from 'react';
 import { Button, Progress, Alert } from 'reactstrap';
+import io from 'socket.io-client';
 
 import './SeatChooser.scss';
 
 class SeatChooser extends React.Component {
 
   state = {
-    interval: null,
+    allSeats: 50,
   }
   
   componentDidMount() {
-    const { loadSeats } = this.props;
+    this.socket = io.connect(process.env.ENV_NODE || 'http://localhost:8001')
+    const { loadSeats, loadSeatsData } = this.props;
     loadSeats();
-    this.setState({
-      interval: setInterval(loadSeats, 120000),
-    });
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.state.interval);
+    this.socket.on('seatsUpdate', seats => {loadSeatsData(seats)});
   }
 
   isTaken = (seatId) => {
@@ -36,14 +32,22 @@ class SeatChooser extends React.Component {
     else return <Button key={seatId} color="primary" className="seats__seat" outline onClick={(e) => updateSeat(e, seatId)}>{seatId}</Button>;
   }
 
-  render() {
+  freeSeats = () => {
+    const { chosenDay, seats } = this.props;
+    const { allSeats } = this.state;
+    const reservedSeats = seats.filter(seat => {return seat.day === chosenDay});
+    let availableSeats = allSeats - reservedSeats.length;
+    return availableSeats;
+  }
 
+  render() {
     const { prepareSeat } = this;
     const { requests } = this.props;
-
+    const { allSeats } = this.state;
     return (
       <div>
         <h3>Pick a seat</h3>
+        { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].success) ? <p>Free seats: {`${this.freeSeats()}/${allSeats}`}</p> : ''}
         <small id="pickHelp" className="form-text text-muted ml-2"><Button color="secondary" /> – seat is already taken</small>
         <small id="pickHelpTwo" className="form-text text-muted ml-2 mb-4"><Button outline color="primary" /> – it's empty</small>
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].success) && <div className="seats">{[...Array(50)].map((x, i) => prepareSeat(i+1) )}</div>}
