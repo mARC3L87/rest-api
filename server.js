@@ -3,6 +3,7 @@ const path = require('path');
 const socket = require('socket.io');
 const app = express();
 const cors = require('cors');
+const mongoose = require('mongoose');
 const port = 8001;
 
 const testimonialsRoutes = require('./routes/testimonials.routes');
@@ -31,6 +32,14 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Not found...' });
 });
 
+mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.once('open', () => {
+  console.log('Connected to the database')
+});
+db.on('error', err => {
+  console.log('Error', err);
+});
 const server = app.listen(process.env.PORT || port, () => {
   console.log(`Server is running on port:${port}`);
 });
