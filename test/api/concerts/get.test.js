@@ -23,7 +23,7 @@ describe('GET/api/concerts', () => {
     expect(res.body.length).to.be.equal(1);
   });
 
-  // after(async () => {
-  //   await Concert.deleteMany();
-  // });
+  after(async () => {
+    await Concert.deleteMany();
+  });
 });

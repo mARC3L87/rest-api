@@ -1,4 +1,5 @@
 const Testimonial = require('../models/testimonial.model');
+const sanitize = require('mongo-sanitize');
 
 exports.getAll = async (req, res) => {
   try {
@@ -23,7 +24,8 @@ exports.getRandom = async (req, res) => {
 };
 exports.getId = async (req, res) => {
   try {
-    const test = await Testimonial.findById({ _id: req.params.id });
+    const clean = sanitize(req.params.id);
+    const test = await Testimonial.findById({ _id: clean });
     if(test) {
       res.json(test);
     } else {

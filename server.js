@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const port = 8001;
+const helmet = require('helmet');
 
 const testimonialsRoutes = require('./routes/testimonials.routes');
 const concertsRoutes = require('./routes/concerts.routes');
@@ -13,6 +14,7 @@ const seatsRoutes = require('./routes/seats.routes');
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(helmet());
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
 
