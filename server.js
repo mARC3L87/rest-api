@@ -32,8 +32,10 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Not found...' });
 });
 
-mongoose.connect('mongodb+srv://marcel-87:pipolonto1@cluster0.ke4bx.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+const dbURI = process.env.NODE_ENV === 'production' ? 'mongodb+srv://marcel-87:pipolonto1@cluster0.ke4bx.mongodb.net/NewWaveDB?retryWrites=true&w=majority' : 'mongodb://localhost:27017/NewWaveDB';
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
+
 db.once('open', () => {
   console.log('Connected to the database')
 });
@@ -47,3 +49,5 @@ const io = socket(server);
 io.on('connection', () => {
   console.log('New socket');
 });
+
+module.exports = server;
