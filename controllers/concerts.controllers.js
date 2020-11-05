@@ -22,7 +22,7 @@ exports.getId = async (req, res) => {
 
 exports.getPerformer = async (req, res) => {
   try {
-    const per = await Concert.findOne({ performer: req.params.performer });
+    const per = await Concert.find({ performer: req.params.performer });
     if(per) {
       res.json(per);
     } else {
@@ -35,7 +35,7 @@ exports.getPerformer = async (req, res) => {
 
 exports.getGenre = async (req, res) => {
   try {
-    const gen = await Concert.findOne({ genre: req.params.genre });
+    const gen = await Concert.find({ genre: req.params.genre });
     if(gen) {
       res.json(gen);
     } else {
